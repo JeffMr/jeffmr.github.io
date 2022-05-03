@@ -35,10 +35,31 @@ body {
   padding: 20px;
 }
 </style>
+<style>
+.chip {
+  display: inline-block;
+  padding: 0 25px;
+  height: 50px;
+  font-size: 16px;
+  line-height: 50px;
+  border-radius: 25px;
+  background-color: #f1f1f1;
+}
+
+.chip img {
+  float: left;
+  margin: 0 10px 0 -25px;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+</style>
 <center>
 <h2>Essa é uma indicação de</h2>
-<h2 style="color: blue;"><b><i>Ke Recomenda<b></i></h2>
-
+<div class="chip">
+  <img src="https://allmylinks.com/upload/User/photo/Y/G/l/sujftcZHfD1uwVnttQw4h8yws-JWw-eV.jpg" alt="Person" width="96" height="96">
+  Ke Recomenda
+</div>
 </center>
 <div class="container">
   <img src="https://jeffmr.github.io/Next(2).png" alt="Notebook" style="width:100%;">
@@ -126,7 +147,7 @@ function myFunction() {
 function myFunction2() {
   var x = document.getElementById("snackbar");
   x.className = "show";
-  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }
 </script>
 </body>
