@@ -230,7 +230,7 @@
         <p>
         <h4>Use o código e abra sua conta!</h4>
         </p>
-        <center><button class="button button3" onclick="myFunction2()">Continuar</button></center>
+        <center><button class="button button3" onclick="snackbarFunction()">Continuar</button></center>
         <h5 style="color: blue;">
         Termos e condições
         <h5>
@@ -240,20 +240,21 @@
               var copyText = document.getElementById("myInput");
             
               /* Select the text field */
-              copyText.select();
-              copyText.setSelectionRange(0, 99999); /* For mobile devices */
+              /*copyText.select();
+              /*copyText.setSelectionRange(0, 99999); /* For mobile devices */
             
               /* Copy the text inside the text field */
               navigator.clipboard.writeText(copyText.value);
+              mypopupFunction();
               
               /* Alert the copied text */
-              alert("Código copiado: " + copyText.value);
-              myFunction2();
+              /*alert("Código copiado: " + copyText.value);*/
+              /*snackbarFunction();*/
             }
         </script>
-        <div id="snackbar">Some text some message..</div>
+        <div id="snackbar">Você será redirecionado..</div>
         <script>
-            function myFunction2() {
+            function snackbarFunction() {
               var x = document.getElementById("snackbar");
               x.className = "show";
               setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
