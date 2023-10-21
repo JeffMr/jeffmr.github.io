@@ -13,7 +13,7 @@ select.addEventListener("change", function () {
 });
 function carregarDados() {
     // Buscando a lista de opções do arquivo 'dados.csv'
-    var data = "dados.csv"; // Armazenando o nome do arquivo 'dados.csv' na variável 'data'
+    var data = "https://explorer.jeffmr.com/exemplos/iptv/-dados.csv"; // Armazenando o nome do arquivo 'dados.csv' na variável 'data'
     var select = document.getElementById("iptv-url"); // Selecionando novamente a lista suspensa com ID 'iptv-url'
 
     fetch(data) // Utilizando a função fetch para buscar o conteúdo do arquivo 'dados.csv'
