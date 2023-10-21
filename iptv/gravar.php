@@ -15,7 +15,7 @@ fwrite($file, $nome . ',' . $url . "\n");
 fclose($file);
 
 // redirecionar de volta para o formulário
-header('Location: index.php');
+header('Location: index.html');
 exit();
 
 ?>
