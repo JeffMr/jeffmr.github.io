@@ -1,0 +1,40 @@
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reprodutor IPTV</title>
+  <!-- Inclua o arquivo CSS do Video.js -->
+  <link href="https://vjs.zencdn.net/7.11.4/video-js.css" rel="stylesheet" />
+  <link href="style.css" rel="stylesheet" />
+  <!-- Inclua o arquivo JS do Video.js  e scripts adicionais -->
+</head>
+
+<body>
+  <div class="bg-conteiner">
+    <div class="container">
+      <label for="iptv-url">Canais Gospel:</label>
+      <select id="iptv-url"></select>
+      <div class="video-container">
+        <video id="my-video" class="video-js" controls preload=auto width="640" height="360" data-setup='{"fluid": true}'>
+          <source src="https://stmv1.srvif.com/gospelf/gospelf/playlist.m3u8" type="application/x-mpegURL">
+          <p class="vjs-no-js">
+            Para visualizar este vídeo, habilite o JavaScript e atualize seu navegador para um que
+            suporte o HTML5.
+          </p>
+        </video>
+        <button class="play-button"></button>
+      </div>
+      <form method="POST" action="gravar.php">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+        <label for="url">URL:</label>
+        <input type="text" id="url" name="url" required>
+        <button type="submit">Adicionar</button>
+      </form>
+    </div>
+  </div>
+  <script src="https://vjs.zencdn.net/7.11.4/video.js"></script>
+  <!--<script src="script.js"></script>-->
+</body>
+
+</html>
