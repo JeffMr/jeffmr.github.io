@@ -1,174 +1,56 @@
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
-
-const PORT = process.env.PORT || 3000;
-const ROOT = __dirname;
-
-// Comprehensive MIME type mapping
-// Zero-dependency replacement for 'mime-types'
-const MIME_TYPES = {
-  // Text / Web Standard
-  '.html': 'text/html',
-  '.htm': 'text/html',
-  '.js': 'text/javascript',
-  '.mjs': 'text/javascript',
-  '.css': 'text/css',
-  '.txt': 'text/plain',
-  '.csv': 'text/csv',
-  '.json': 'application/json',
-  '.map': 'application/json',
-  '.xml': 'application/xml',
-
-  // Images
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.gif': 'image/gif',
-  '.svg': 'image/svg+xml',
-  '.ico': 'image/x-icon',
-  '.webp': 'image/webp',
-  '.tiff': 'image/tiff',
-  '.exr': 'image/x-exr',
-  '.hdr': 'image/vnd.radiance',
-
-  // Video / Audio
-  '.mp4': 'video/mp4',
-  '.webm': 'video/webm',
-  '.mov': 'video/quicktime',
-  '.ogv': 'video/ogg',
-  '.mp3': 'audio/mpeg',
-  '.wav': 'audio/wav',
-  '.ogg': 'audio/ogg',
-  '.m4a': 'audio/mp4',
-
-  // Fonts
-  '.woff': 'font/woff',
-  '.woff2': 'font/woff2',
-  '.ttf': 'font/ttf',
-  '.otf': 'font/otf',
-  '.eot': 'application/vnd.ms-fontobject',
-
-  // 3D Models / CAD
-  '.glb': 'model/gltf-binary',
-  '.gltf': 'model/gltf+json',
-  '.usdz': 'model/vnd.usdz+zip',
-  '.obj': 'model/obj',
-  '.mtl': 'model/mtl',
-  '.stl': 'model/stl',
-
-  // Documents / Data
-  '.pdf': 'application/pdf',
-  '.zip': 'application/zip',
-  '.gz': 'application/gzip',
-  '.wasm': 'application/wasm',
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 
-const server = http.createServer(async (req, res) => {
-  const requestUrl = new URL(req.url, 'http://localhost');
-  const decodedPath = decodeURIComponent(requestUrl.pathname);
-  const absolutePath = path.join(ROOT, decodedPath);
-
-  // Trying to access outside the folder
-  if (!absolutePath.startsWith(ROOT + path.sep)) {
-    res.statusCode = 403;
-    res.end('Forbidden');
-    return;
-  }
-
-  const getStats = async (p) => {
-    try {
-      const stats = await fs.promises.stat(p);
-      return stats.isFile() ? stats : null;
-    } catch {
-      return null;
-    }
-  };
-
-  const serveFile = (filePath, stats, statusCode = 200) => {
-    const ext = path.extname(filePath).toLowerCase();
-
-    // Default to binary stream if unknown type
-    const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-    res.setHeader('Content-Type', contentType);
-
-    // --- Caching Logic ---
-    const mtime = stats.mtime.toUTCString();
-    res.setHeader('Last-Modified', mtime);
-
-    // Handle 304 Not Modified
-    if (req.headers['if-modified-since'] === mtime) {
-      res.statusCode = 304;
-      res.end();
-      return;
-    }
-
-    // Cache-Control Headers
-    if (ext === '.html' || ext === '.htm') {
-      // HTML: Always validate with server to see if new deployment exists
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    } else {
-      // Assets: Cache for 1 year (Immutable)
-      // Assumes build tools (Vite/Next) use hashed filenames for assets
-      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-    }
-
-    res.statusCode = statusCode;
-
-    const stream = fs.createReadStream(filePath);
-    stream.on('error', (err) => {
-      console.error('Stream error:', err);
-      res.statusCode = 500;
-      res.end();
+// server.ts
+var import_express = __toESM(require("express"), 1);
+var import_path = __toESM(require("path"), 1);
+var import_fs = __toESM(require("fs"), 1);
+async function startServer() {
+  const app = (0, import_express.default)();
+  const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3e3;
+  app.get("/api/health", (req, res) => {
+    res.json({ status: "ok" });
+  });
+  const isProduction = process.env.NODE_ENV === "production" || import_fs.default.existsSync(import_path.default.join(process.cwd(), "server.cjs")) || import_fs.default.existsSync(import_path.default.join(process.cwd(), "index.html"));
+  if (!isProduction) {
+    const viteModule = await import("vite");
+    const vite = await viteModule.createServer({
+      server: { middlewareMode: true },
+      appType: "spa"
     });
-    stream.pipe(res);
-  };
-
-  try {
-    // --- Resolution Strategy ---
-
-    // 1. Exact Match (e.g. /style.css, /logo.png)
-    let stats = await getStats(absolutePath);
-    if (stats) return serveFile(absolutePath, stats);
-
-    // 2. HTML Extension (Next.js Export: /about -> /about.html)
-    const htmlPath = absolutePath + '.html';
-    stats = await getStats(htmlPath);
-    if (stats) return serveFile(htmlPath, stats);
-
-    // 3. Directory Index (Standard Web: /blog -> /blog/index.html)
-    const dirIndexPath = path.join(absolutePath, 'index.html');
-    stats = await getStats(dirIndexPath);
-    if (stats) return serveFile(dirIndexPath, stats);
-
-    // 4. Missing File
-    // If the URL has an extension at this point return 404.
-    if (path.extname(absolutePath)) {
-      res.statusCode = 404;
-      res.end('Not Found');
-      return;
-    }
-
-    // 5. Custom 404 (Next.js Exports)
-    const custom404Path = path.join(ROOT, '404.html');
-    stats = await getStats(custom404Path);
-    if (stats) return serveFile(custom404Path, stats, 404);
-
-    // 6. SPA Fallback
-    const spaIndexPath = path.join(ROOT, 'index.html');
-    stats = await getStats(spaIndexPath);
-    if (stats) return serveFile(spaIndexPath, stats, 200);
-
-    // 7. Hard 404
-    res.statusCode = 404;
-    res.end('Not Found');
-  } catch (err) {
-    console.error('Server error:', err);
-    res.statusCode = 500;
-    res.end('Internal Server Error');
+    app.use(vite.middlewares);
+  } else {
+    const distPath = import_path.default.join(process.cwd(), "dist");
+    const distIndex = import_path.default.join(distPath, "index.html");
+    const staticPath = import_fs.default.existsSync(distIndex) ? distPath : process.cwd();
+    app.use(import_express.default.static(staticPath));
+    app.get("*", (req, res) => {
+      res.sendFile(import_path.default.join(staticPath, "index.html"));
+    });
   }
-});
-
-server.listen(PORT, () => {
-  console.log(`Static Shim running on http://localhost:${PORT}`);
-});
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+startServer();
+//# sourceMappingURL=server.cjs.map
