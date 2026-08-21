@@ -10,17 +10,17 @@
       // Trava de segurança contra loops acidentais
       if (l.search && l.search.indexOf('~and~') !== -1 && l.search.indexOf('?') !== -1) {
         // Se já houver sinal de codificação múltipla, vai direto para a raiz limpa do app
-        window.location.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/tarefas-site/');
+        window.location.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/tarefas.site/');
       } else {
         var pathSegments = l.pathname.split('/').filter(Boolean);
-        var rootProject = 'tarefas-site';
+        var rootProject = 'tarefas.site';
         var remainingPath = '';
 
         if (pathSegments.length > 0) {
-          if (pathSegments[0] === 'tarefas-site') {
+          if (pathSegments[0] === 'tarefas.site' || pathSegments[0] === 'tarefas-site') {
             remainingPath = pathSegments.slice(1).join('/');
           } else {
-            // Caso a rota tenha sido requisitada na raiz (ex: /task-viewer), direciona para dentro de /tarefas-site/
+            // Caso a rota tenha sido requisitada na raiz (ex: /task-viewer), direciona para dentro de /tarefas.site/
             remainingPath = pathSegments.join('/');
           }
         }
