@@ -9,21 +9,31 @@
       var pathSegments = l.pathname.split('/').filter(Boolean);
 
       if (pathSegments.length > 0) {
-        var rootProject = pathSegments[0];
-        var remainingPath = pathSegments.slice(1).join('/');
+        var rootProject = '';
+        var remainingPath = '';
+
+        if (pathSegments.length > 1) {
+          // Se houver mais de um segmento, o primeiro é a pasta do projeto (raiz do projeto)
+          rootProject = pathSegments[0];
+          remainingPath = pathSegments.slice(1).join('/');
+        } else {
+          // Se houver apenas um segmento, a raiz é o próprio domínio principal (jeffmr.github.io)
+          rootProject = '';
+          remainingPath = pathSegments[0];
+        }
 
         // Trava de segurança contra loops acidentais específica do projeto identificado
         if (l.search && l.search.indexOf('~and~') !== -1 && l.search.indexOf('?') !== -1) {
-          window.location.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/' + rootProject + '/');
+          var cleanBase = l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/' + (rootProject ? rootProject + '/' : '');
+          window.location.replace(cleanBase);
         } else {
           var searchParams = l.search ? (remainingPath ? '&' : '') + l.search.slice(1).replace(/&/g, '~and~') : '';
+          
+          // Constrói o caminho de redirecionamento de forma limpa para evitar barras duplas e reinjetar o ?/ para o SPA Router
+          var redirectPath = '/' + (rootProject ? rootProject + '/' : '') + '?/' + remainingPath.replace(/&/g, '~and~') + searchParams + l.hash;
 
           l.replace(
-            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-            '/' + rootProject + '/' +
-            remainingPath.replace(/&/g, '~and~') +
-            searchParams +
-            l.hash
+            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + redirectPath
           );
         }
       }
