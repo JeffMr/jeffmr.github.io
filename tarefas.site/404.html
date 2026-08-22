@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Redirecionando...</title>
     <script type="text/javascript">
-      // Single Page Apps for GitHub Pages SPA Redirect - Dinâmico e Isolado por Projeto
+      // Single Page Apps for GitHub Pages - Redirecionamento 100% Limpo por sessionStorage
       var l = window.location;
       var pathSegments = l.pathname.split('/').filter(Boolean);
 
@@ -13,29 +13,27 @@
         var remainingPath = '';
 
         if (pathSegments.length > 1) {
-          // Se houver mais de um segmento, o primeiro é a pasta do projeto (raiz do projeto)
+          // Se houver mais de um segmento (ex: /loja/dashboard), o primeiro é a pasta do projeto (raiz)
           rootProject = pathSegments[0];
-          remainingPath = pathSegments.slice(1).join('/');
+          remainingPath = '/' + pathSegments.slice(1).join('/');
         } else {
-          // Se houver apenas um segmento, a raiz é o próprio domínio principal (jeffmr.github.io)
+          // Se houver apenas um segmento (ex: /dashboard), a raiz é o próprio domínio principal (jeffmr.github.io)
           rootProject = '';
-          remainingPath = pathSegments[0];
+          remainingPath = '/' + pathSegments[0];
         }
 
-        // Trava de segurança contra loops acidentais específica do projeto identificado
-        if (l.search && l.search.indexOf('~and~') !== -1 && l.search.indexOf('?') !== -1) {
-          var cleanBase = l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/' + (rootProject ? rootProject + '/' : '');
-          window.location.replace(cleanBase);
-        } else {
-          var searchParams = l.search ? (remainingPath ? '&' : '') + l.search.slice(1).replace(/&/g, '~and~') : '';
-          
-          // Constrói o caminho de redirecionamento de forma limpa para evitar barras duplas e reinjetar o ?/ para o SPA Router
-          var redirectPath = '/' + (rootProject ? rootProject + '/' : '') + '?/' + remainingPath.replace(/&/g, '~and~') + searchParams + l.hash;
+        var storageKey = rootProject ? 'ghpages_redirect_' + rootProject : 'ghpages_redirect_root';
+        
+        try {
+          sessionStorage.setItem(storageKey, JSON.stringify({
+            path: remainingPath,
+            search: l.search || '',
+            hash: l.hash || ''
+          }));
+        } catch (e) {}
 
-          l.replace(
-            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + redirectPath
-          );
-        }
+        // Redireciona de forma limpa para a pasta raiz correspondente
+        l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/' + (rootProject ? rootProject + '/' : ''));
       }
     </script>
   </head>

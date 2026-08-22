@@ -26,18 +26,25 @@
     <meta property="twitter:description" content="Organize suas tarefas, interaja com a comunidade e ganhe recompensas reais concluindo metas diárias." />
     <meta property="twitter:image" content="https://tarefas.site/og-image.png" />
 
-    <!-- GitHub Pages Single Page App Redirect Receiver -->
+    <!-- GitHub Pages Single Page App Redirect Receiver (URLs Limpas via sessionStorage) -->
     <script type="text/javascript">
       (function(l) {
-        if (l.search && l.search[1] === '/' ) {
-          var decoded = l.search.slice(1).split('&').map(function(s) { 
-            return s.replace(/~and~/g, '&');
-          }).join('?');
-          var basePath = l.pathname.endsWith('/') ? l.pathname.slice(0, -1) : l.pathname;
-          window.history.replaceState(null, null,
-              basePath + decoded + l.hash
-          );
-        }
+        try {
+          var pathSegments = l.pathname.split('/').filter(Boolean);
+          var storageKey = 'ghpages_redirect_root';
+          if (pathSegments.length > 0) {
+            storageKey = 'ghpages_redirect_' + pathSegments[0];
+          }
+          var redirectDataStr = sessionStorage.getItem(storageKey);
+          if (redirectDataStr) {
+            sessionStorage.removeItem(storageKey);
+            var data = JSON.parse(redirectDataStr);
+            if (data && data.path) {
+              var basePath = l.pathname.endsWith('/') ? l.pathname.slice(0, -1) : l.pathname;
+              window.history.replaceState(null, null, basePath + data.path + data.search + data.hash);
+            }
+          }
+        } catch (e) {}
       }(window.location))
     </script>
     <!-- Mercado Pago SDK V2 (Carregado com defer para não bloquear o carregamento do React) -->
