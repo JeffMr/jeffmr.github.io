@@ -2,38 +2,30 @@
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8">
-    <title>Tarefas.site - Redirecionando...</title>
+    <title>Redirecionando...</title>
     <script type="text/javascript">
-      // Single Page Apps for GitHub Pages SPA Redirect
+      // Single Page Apps for GitHub Pages SPA Redirect - Dinâmico e Isolado por Projeto
       var l = window.location;
-      
-      // Trava de segurança contra loops acidentais
-      if (l.search && l.search.indexOf('~and~') !== -1 && l.search.indexOf('?') !== -1) {
-        // Se já houver sinal de codificação múltipla, vai direto para a raiz limpa do app
-        window.location.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/tarefas.site/');
-      } else {
-        var pathSegments = l.pathname.split('/').filter(Boolean);
-        var rootProject = 'tarefas.site';
-        var remainingPath = '';
+      var pathSegments = l.pathname.split('/').filter(Boolean);
 
-        if (pathSegments.length > 0) {
-          if (pathSegments[0] === 'tarefas.site' || pathSegments[0] === 'tarefas-site') {
-            remainingPath = pathSegments.slice(1).join('/');
-          } else {
-            // Caso a rota tenha sido requisitada na raiz (ex: /task-viewer), direciona para dentro de /tarefas.site/
-            remainingPath = pathSegments.join('/');
-          }
+      if (pathSegments.length > 0) {
+        var rootProject = pathSegments[0];
+        var remainingPath = pathSegments.slice(1).join('/');
+
+        // Trava de segurança contra loops acidentais específica do projeto identificado
+        if (l.search && l.search.indexOf('~and~') !== -1 && l.search.indexOf('?') !== -1) {
+          window.location.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/' + rootProject + '/');
+        } else {
+          var searchParams = l.search ? (remainingPath ? '&' : '') + l.search.slice(1).replace(/&/g, '~and~') : '';
+
+          l.replace(
+            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+            '/' + rootProject + '/?/' +
+            remainingPath.replace(/&/g, '~and~') +
+            searchParams +
+            l.hash
+          );
         }
-
-        var searchParams = l.search ? (remainingPath ? '&' : '') + l.search.slice(1).replace(/&/g, '~and~') : '';
-
-        l.replace(
-          l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-          '/' + rootProject + '/?/' +
-          remainingPath.replace(/&/g, '~and~') +
-          searchParams +
-          l.hash
-        );
       }
     </script>
   </head>
