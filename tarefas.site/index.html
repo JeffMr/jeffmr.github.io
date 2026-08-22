@@ -42,8 +42,23 @@
     </script>
     <!-- Mercado Pago SDK V2 (Carregado com defer para não bloquear o carregamento do React) -->
     <script defer src="https://sdk.mercadopago.com/js/v2"></script>
-    <script type="module" crossorigin src="/tarefas.site/assets/index-BvKBH2bU.js"></script>
-    <link rel="stylesheet" crossorigin href="/tarefas.site/assets/index-Ce6-KHmW.css">
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('tarefas_theme_preference');
+          var isDark = saved === 'dark' || (saved === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.style.colorScheme = 'dark';
+          } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.style.colorScheme = 'light';
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="/tarefas.site/assets/index-CP-hGKRa.js"></script>
+    <link rel="stylesheet" crossorigin href="/tarefas.site/assets/index-Df_p4tDA.css">
   </head>
   <body class="bg-slate-900 text-slate-100">
     <div id="root">
