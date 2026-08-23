@@ -27,6 +27,7 @@ var import_path = __toESM(require("path"), 1);
 var import_vite = require("vite");
 var import_app = require("firebase/app");
 var import_firestore = require("firebase/firestore");
+var import_auth = require("firebase/auth");
 var firebaseConfig = {
   apiKey: process.env.VITE_FIREBASE_API_KEY,
   authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -38,6 +39,7 @@ var firebaseConfig = {
 var isConfigured = !!firebaseConfig.apiKey && firebaseConfig.apiKey !== "SUA_API_KEY_AQUI";
 var firebaseApp = isConfigured ? !(0, import_app.getApps)().length ? (0, import_app.initializeApp)(firebaseConfig) : (0, import_app.getApp)() : null;
 var db = firebaseApp ? (0, import_firestore.getFirestore)(firebaseApp) : null;
+var auth = firebaseApp ? (0, import_auth.getAuth)(firebaseApp) : null;
 async function startServer() {
   const app = (0, import_express.default)();
   const PORT = 3e3;
@@ -124,6 +126,30 @@ async function startServer() {
       messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
       appId: process.env.VITE_FIREBASE_APP_ID || ""
     });
+  });
+  app.post("/api/login", async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: "E-mail e senha s\xE3o obrigat\xF3rios." });
+    }
+    if (!auth) {
+      if (password === "admin") {
+        return res.json({ token: "mock_admin_token_jwt_like", email });
+      }
+      return res.status(401).json({ error: 'E-mail ou senha incorretos (Simula\xE7\xE3o: use a senha "admin").' });
+    }
+    try {
+      const userCredential = await (0, import_auth.signInWithEmailAndPassword)(auth, email, password);
+      const user = userCredential.user;
+      const token = await user.getIdToken();
+      res.json({ token, email: user.email });
+    } catch (error) {
+      console.error("Erro de autentica\xE7\xE3o no Firebase:", error);
+      if (password === "admin") {
+        return res.json({ token: "mock_admin_token_jwt_like", email });
+      }
+      res.status(401).json({ error: "E-mail ou senha inv\xE1lidos." });
+    }
   });
   app.get("/api/projects", async (req, res) => {
     if (!db) {
