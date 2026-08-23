@@ -3,50 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>__SEO_TITLE__</title>
-    <script>
-      (function() {
-        var defaultTitle = "Jefferson Miranda | Portfólio";
-        var defaultDesc = "Portfólio profissional de Jefferson Miranda - Desenvolvedor Fullstack especialista em JavaScript, React e Node.js.";
-        var defaultKeywords = "jefferson miranda, desenvolvedor, fullstack, react, node, portfolio, typescript, firebase";
-        var defaultFavicon = "https://img.icons8.com/color/48/000000/portfolio.png";
-
-        var titleEl = document.querySelector('title');
-        if (titleEl && (titleEl.innerText.indexOf('__SEO_TITLE__') !== -1 || titleEl.innerText === '')) {
-          titleEl.innerText = defaultTitle;
-        }
-
-        var metas = document.querySelectorAll('meta');
-        for (var i = 0; i < metas.length; i++) {
-          var meta = metas[i];
-          var content = meta.getAttribute('content');
-          if (content && content.indexOf('__SEO_') !== -1) {
-            var name = meta.getAttribute('name');
-            var prop = meta.getAttribute('property');
-            if (name === 'description' || prop === 'og:description') {
-              meta.setAttribute('content', defaultDesc);
-            } else if (name === 'keywords') {
-              meta.setAttribute('content', defaultKeywords);
-            } else if (prop === 'og:title') {
-              meta.setAttribute('content', defaultTitle);
-            }
-          }
-        }
-
-        var fav = document.getElementById('meta-favicon');
-        if (fav && fav.getAttribute('href') && fav.getAttribute('href').indexOf('__FAVICON_URL__') !== -1) {
-          fav.setAttribute('href', defaultFavicon);
-        }
-      })();
-    </script>
-    <meta name="description" content="__SEO_DESCRIPTION__" />
-    <meta name="keywords" content="__SEO_KEYWORDS__" />
-    <meta property="og:title" content="__SEO_TITLE__" />
-    <meta property="og:description" content="__SEO_DESCRIPTION__" />
+    <title>Jefferson Miranda | Portfólio</title>
+    <meta name="description" content="Portfólio profissional de Jefferson Miranda - Desenvolvedor Fullstack especialista em JavaScript, React e Node.js." />
+    <meta name="keywords" content="jefferson miranda, desenvolvedor, fullstack, react, node, portfolio, typescript, firebase" />
+    <meta property="og:title" content="Jefferson Miranda | Portfólio" />
+    <meta property="og:description" content="Portfólio profissional de Jefferson Miranda - Desenvolvedor Fullstack especialista em JavaScript, React e Node.js." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link id="meta-favicon" rel="icon" type="image/png" href="__FAVICON_URL__" />
-    <script type="module" crossorigin src="/assets/index-D3GIlCNZ.js"></script>
+    <link id="meta-favicon" rel="icon" type="image/png" href="https://img.icons8.com/color/48/000000/portfolio.png" />
+    <script type="module" crossorigin src="/assets/index-sttASTFO.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-CtdFkMSG.css">
   </head>
   <body>
